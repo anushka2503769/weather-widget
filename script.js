@@ -18,72 +18,59 @@ const iconDatabase = {
 
 async function fetchSingaporeWeather() {
   try {
-    // Queries the corrected real-time 24-hr data feed endpoint architecture
-    const response = await fetch('https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast');
-    if (!response.ok) throw new Error('API operational gateway mismatch');
+    // Connects to an unprotected CORS-compliant open forecast proxy
+    const response = await fetch('https://wttr.in');
+    if (!response.ok) throw new Error('Proxy connection drop state');
     
-    const resPayload = await response.json();
+    const data = await response.json();
     
-    // Fallback and deep scanning parsing layer to ensure stability across structural updates
-    let records = null;
-    if (resPayload && resPayload.data && resPayload.data.records) {
-      records = resPayload.data.records;
-    } else if (resPayload && resPayload.records) {
-      records = resPayload.records;
-    }
+    // Extract real-time metrics safely from JSON schema
+    const currentCondition = data.current_condition[0];
+    const currentTemp = currentCondition.temp_C;
+    const weatherDesc = currentCondition.weatherDesc[0].value;
     
-    if (!records || !records.general) throw new Error('Invalid metadata configuration format');
+    // Scan future hourly windows to aggregate exact rainfall projections
+    const todayWeather = data.weather[0];
+    const rainChancePercent = todayWeather.hourly[0].chanceofrain;
     
-    const generalData = records.general;
-    const generalForecast = generalData.forecast || "Cloudy";
-    const lowTemp = generalData.temperature ? generalData.temperature.low : 26;
-    const highTemp = generalData.temperature ? generalData.temperature.high : 32;
+    document.getElementById('temperature').textContent = `${currentTemp}°C`;
+    document.getElementById('condition').textContent = weatherDesc;
     
-    // Look up humidity safe boundaries to predict local precipitation
-    const humidityHigh = (generalData.relativeHumidity && generalData.relativeHumidity.high) ? generalData.relativeHumidity.high : 80;
-    
-    const computedTemp = Math.round((lowTemp + highTemp) / 2);
-    document.getElementById('temperature').textContent = `${computedTemp}°C`;
-    document.getElementById('condition').textContent = generalForecast;
-    
-    // Parse predictions and map descriptive summaries
+    // Map custom text alerts based on rain percentage outputs
     let rainStatus = "Unlikely to disturb your studies";
-    const conditionLower = generalForecast.toLowerCase();
-    
-    if (conditionLower.includes('thunder') || conditionLower.includes('heavy')) {
-      rainStatus = "Heavy downpours imminent";
-    } else if (conditionLower.includes('rain') || conditionLower.includes('shower') || conditionLower.includes('passing')) {
-      rainStatus = "Showers rolling through the region";
-    } else if (humidityHigh > 85) {
-      rainStatus = "High humidity indicates oncoming dampness";
-    } else if (conditionLower.includes('cloudy') || conditionLower.includes('overcast')) {
-      rainStatus = "Overcast; precipitation risk is minimal";
+    if (parseInt(rainChancePercent) > 70) {
+      rainStatus = `Heavy downpours imminent (${rainChancePercent}% chance)`;
+    } else if (parseInt(rainChancePercent) > 35) {
+      rainStatus = `Showers expected nearby (${rainChancePercent}% chance)`;
+    } else if (parseInt(rainChancePercent) > 15) {
+      rainStatus = `Overcast skies formatting (${rainChancePercent}% chance)`;
     }
     document.getElementById('rain-prediction').textContent = `Rain Forecast: ${rainStatus}`;
     
-    // Set icons and literary matches
+    // Match definitions to assign artwork strings and visual weather markers
+    const lowerDesc = weatherDesc.toLowerCase();
     let chosenMood = moodDatabase.default;
-    let chosenIcon = iconDatabase.cloudy; 
+    let chosenIcon = iconDatabase.cloudy;
     
-    if (conditionLower.includes('clear') || conditionLower.includes('fair')) {
+    if (lowerDesc.includes('sunny') || lowerDesc.includes('clear')) {
       chosenMood = moodDatabase.clear;
       chosenIcon = iconDatabase.clear;
-    } else if (conditionLower.includes('partly cloudy')) {
+    } else if (lowerDesc.includes('partly cloudy')) {
       chosenMood = moodDatabase.cloudy;
       chosenIcon = iconDatabase.partlyCloudy;
-    } else if (conditionLower.includes('cloudy') || conditionLower.includes('overcast')) {
+    } else if (lowerDesc.includes('cloudy') || lowerDesc.includes('overcast')) {
       chosenMood = moodDatabase.cloudy;
       chosenIcon = iconDatabase.cloudy;
-    } else if (conditionLower.includes('thunder')) {
+    } else if (lowerDesc.includes('thunder') || lowerDesc.includes('storm')) {
       chosenMood = moodDatabase.thunderstorm;
       chosenIcon = iconDatabase.thunderstorm;
-    } else if (conditionLower.includes('light rain') || conditionLower.includes('light shower') || conditionLower.includes('passing')) {
+    } else if (lowerDesc.includes('light rain') || lowerDesc.includes('drizzle') || lowerDesc.includes('patchy')) {
       chosenMood = moodDatabase.rain;
       chosenIcon = iconDatabase.lightRain;
-    } else if (conditionLower.includes('rain') || conditionLower.includes('shower')) {
+    } else if (lowerDesc.includes('rain') || lowerDesc.includes('shower')) {
       chosenMood = moodDatabase.rain;
       chosenIcon = iconDatabase.heavyRain;
-    } else if (conditionLower.includes('mist') || conditionLower.includes('haze')) {
+    } else if (lowerDesc.includes('mist') || lowerDesc.includes('fog') || lowerDesc.includes('haze')) {
       chosenMood = moodDatabase.default;
       chosenIcon = iconDatabase.mist;
     }
@@ -92,7 +79,7 @@ async function fetchSingaporeWeather() {
     document.getElementById('renaissance-mood').textContent = chosenMood;
     
   } catch (error) {
-    console.error('Data layout pipeline warning state:', error);
+    console.error('Proxy loading channel alert exception:', error);
     document.getElementById('condition').textContent = "Sky unreadable";
     document.getElementById('rain-prediction').textContent = "Rain Forecast: Disconnected";
     document.getElementById('weather-icon-box').textContent = "🕯️";
@@ -100,7 +87,7 @@ async function fetchSingaporeWeather() {
   }
 }
 
-// Notion system container interface matching algorithm
+// Notion system canvas background detection script element
 (function() {
   function matchNotionTheme() {
     try {
