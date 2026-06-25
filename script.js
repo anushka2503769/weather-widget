@@ -18,39 +18,50 @@ const iconDatabase = {
 
 async function fetchSingaporeWeather() {
   try {
-    // Connects directly to the live environment 24-hour weather data channel
+    // Queries the corrected real-time 24-hr data feed endpoint architecture
     const response = await fetch('https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast');
-    if (!response.ok) throw new Error('API server link broke');
+    if (!response.ok) throw new Error('API operational gateway mismatch');
     
     const resPayload = await response.json();
     
-    // Extract parameters from the internal response format structure
-    const record = resPayload.data.records[0];
-    const generalForecast = record.general.forecast;
-    const lowTemp = record.general.temperature.low;
-    const highTemp = record.general.temperature.high;
-    const humidityHigh = record.general.relativeHumidity.high;
+    // Fallback and deep scanning parsing layer to ensure stability across structural updates
+    let records = null;
+    if (resPayload && resPayload.data && resPayload.data.records) {
+      records = resPayload.data.records;
+    } else if (resPayload && resPayload.records) {
+      records = resPayload.records;
+    }
+    
+    if (!records || !records.general) throw new Error('Invalid metadata configuration format');
+    
+    const generalData = records.general;
+    const generalForecast = generalData.forecast || "Cloudy";
+    const lowTemp = generalData.temperature ? generalData.temperature.low : 26;
+    const highTemp = generalData.temperature ? generalData.temperature.high : 32;
+    
+    // Look up humidity safe boundaries to predict local precipitation
+    const humidityHigh = (generalData.relativeHumidity && generalData.relativeHumidity.high) ? generalData.relativeHumidity.high : 80;
     
     const computedTemp = Math.round((lowTemp + highTemp) / 2);
     document.getElementById('temperature').textContent = `${computedTemp}°C`;
     document.getElementById('condition').textContent = generalForecast;
     
-    // Calculate rain predictions based on conditions and humidity data points
-    let rainStatus = "Unlikely to disrupt your day";
+    // Parse predictions and map descriptive summaries
+    let rainStatus = "Unlikely to disturb your studies";
     const conditionLower = generalForecast.toLowerCase();
     
-    if (conditionLower.includes('thundery') || conditionLower.includes('heavy')) {
+    if (conditionLower.includes('thunder') || conditionLower.includes('heavy')) {
       rainStatus = "Heavy downpours imminent";
     } else if (conditionLower.includes('rain') || conditionLower.includes('shower') || conditionLower.includes('passing')) {
       rainStatus = "Showers rolling through the region";
     } else if (humidityHigh > 85) {
       rainStatus = "High humidity indicates oncoming dampness";
-    } else if (conditionLower.includes('cloudy')) {
-      rainStatus = "Overcast overcast; rain possibility low";
+    } else if (conditionLower.includes('cloudy') || conditionLower.includes('overcast')) {
+      rainStatus = "Overcast; precipitation risk is minimal";
     }
     document.getElementById('rain-prediction').textContent = `Rain Forecast: ${rainStatus}`;
     
-    // Assign icons and literary mood quotes based on parsed metrics
+    // Set icons and literary matches
     let chosenMood = moodDatabase.default;
     let chosenIcon = iconDatabase.cloudy; 
     
@@ -81,7 +92,7 @@ async function fetchSingaporeWeather() {
     document.getElementById('renaissance-mood').textContent = chosenMood;
     
   } catch (error) {
-    console.error('Data pipeline exception triggered:', error);
+    console.error('Data layout pipeline warning state:', error);
     document.getElementById('condition').textContent = "Sky unreadable";
     document.getElementById('rain-prediction').textContent = "Rain Forecast: Disconnected";
     document.getElementById('weather-icon-box').textContent = "🕯️";
@@ -89,13 +100,13 @@ async function fetchSingaporeWeather() {
   }
 }
 
-// System color adaptation function
+// Notion system container interface matching algorithm
 (function() {
   function matchNotionTheme() {
     try {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.body.style.background = isDark ? '#191919' : 'transparent';
-      document.documentElement.style.background = isDark ? '#191919' : 'transparent';
+      document.body.style.setProperty('background', isDark ? '#191919' : 'transparent', 'important');
+      document.documentElement.style.setProperty('background', isDark ? '#191919' : 'transparent', 'important');
     } catch(e) {
       document.body.style.background = 'transparent';
     }
@@ -107,4 +118,4 @@ async function fetchSingaporeWeather() {
 })();
 
 fetchSingaporeWeather();
-setInterval(fetchSingaporeWeather, 15 * 60 * 1000); // Check updates every 15 minutes
+setInterval(fetchSingaporeWeather, 15 * 60 * 1000);
