@@ -6,14 +6,12 @@
   <title>Renaissance Singapore Weather Widget</title>
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <!-- Classical serif typography for an antique museum look -->
   <link href="https://googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <div class="weather-card">
-    <!-- Ornate decorative corners -->
     <div class="corner top-left">✦</div>
     <div class="corner top-right">✦</div>
     <div class="corner bottom-left">✦</div>
@@ -23,11 +21,16 @@
       <h1 id="location-title">SINGAPORE</h1>
       <div class="ornament">❖ ────── ❖</div>
       
+      <!-- Live Dynamic Weather Graphic Frame -->
+      <div id="weather-icon-box">☀️</div>
+      
       <div class="weather-details">
         <p id="temperature">--°C</p>
-        <p id="condition">Gathering skies...</p>
+        <p id="condition">Reading the heavens...</p>
+        <p id="rain-prediction">Precipitation: --</p>
       </div>
       
+      <div class="ornament-small">❖</div>
       <p id="renaissance-mood">“The canvas of the sky awaits its master.”</p>
     </div>
   </div>
