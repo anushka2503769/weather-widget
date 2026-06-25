@@ -1,9 +1,9 @@
 :root {
-  --bg-dark: #191919;       /* Blends with Notion dark theme canvas background */
-  --card-bg: #1A2326;       /* Deep Renaissance slate/midnight teal backdrop instead of brown */
-  --accent-gold: #D4B26F;   /* Burnished antique gold leaf trim */
-  --muted-teal: #7A9A95;     /* Soft sage/teal accent for labels */
-  --text-parchment: #EBE6DD; /* Distressed marble/parchment tone for legibility */
+  --bg-dark: #191919;       /* Matches Notion canvas background */
+  --card-bg: #131A1C;       /* Moody dark Baroque deep indigo-teal instead of brown */
+  --accent-gold: #D4B26F;   /* Antique burnished gold trim */
+  --muted-teal: #688F89;    /* Soft Florentine sage/teal for secondary metadata */
+  --text-parchment: #EBE6DD; /* Distressed classical marble text tone */
 }
 
 * {
@@ -16,7 +16,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: transparent; 
+  background: transparent !important; 
   font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
@@ -24,17 +24,17 @@ html, body {
   padding: 2vw;
 }
 
-/* Fluid design scaling: values adapt depending on container wrapper boxes */
+/* Fluid responsive box container properties */
 .weather-card {
   position: relative;
   width: 100%;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  background-color: var(--card-bg);
+  background-color: var(--card-bg) !important; /* !important guarantees it overwrites url query values */
   border: 1px solid rgba(212, 178, 111, 0.2); 
   border-radius: 16px;
-  padding: clamp(15px, 5vh, 40px) clamp(15px, 5vw, 30px);
+  padding: clamp(12px, 4vh, 32px) clamp(12px, 4vw, 24px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
@@ -45,16 +45,17 @@ html, body {
 
 .card-content {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around; /* Dynamically distributes layout space according to window frame sizing */
   align-items: center;
 }
 
 .corner {
   position: absolute;
   font-family: 'Cinzel', serif;
-  font-size: clamp(0.6rem, 2vw, 0.85rem);
+  font-size: clamp(0.5rem, 1.8vw, 0.8rem);
   color: var(--accent-gold);
   opacity: 0.35;
   user-select: none;
@@ -66,69 +67,63 @@ html, body {
 
 #location-title {
   font-family: 'Cinzel', serif;
-  font-size: clamp(0.9rem, 3.5vw, 1.25rem);
+  font-size: clamp(0.85rem, 3.2vw, 1.15rem);
   font-weight: 700;
   letter-spacing: 0.3em;
   color: var(--accent-gold);
-  margin-bottom: 0.5vh;
 }
 
 .ornament {
-  font-size: clamp(0.5rem, 1.8vw, 0.7rem);
+  font-size: clamp(0.45rem, 1.5vw, 0.65rem);
   color: var(--muted-teal);
   opacity: 0.6;
-  margin-bottom: 2vh;
   letter-spacing: 0.1em;
+  margin: 0.5vh 0;
 }
 
 #weather-icon-box {
-  font-size: clamp(2.5rem, 12vh, 4.5rem);
-  margin-bottom: 1.5vh;
-  filter: sepia(0.25) drop-shadow(0px 5px 6px rgba(0,0,0,0.4));
+  font-size: clamp(2.2rem, 12vh, 4rem);
+  filter: sepia(0.2) drop-shadow(0px 4px 6px rgba(0,0,0,0.5));
   line-height: 1;
 }
 
 #temperature {
   font-family: 'Cinzel', serif;
-  font-size: clamp(2.2rem, 10vh, 3.8rem);
+  font-size: clamp(2rem, 10vh, 3.5rem);
   font-weight: 500;
   color: var(--text-parchment);
-  line-height: 1.1;
-  margin-bottom: 0.5vh;
+  line-height: 1;
 }
 
 #condition {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(0.7rem, 2.2vw, 0.85rem);
+  font-size: clamp(0.65rem, 2vw, 0.8rem);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: var(--muted-teal);
-  margin-bottom: 0.5vh;
   font-weight: 600;
 }
 
 #rain-prediction {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(0.65rem, 2vw, 0.8rem);
+  font-size: clamp(0.6rem, 1.8vw, 0.75rem);
   color: var(--text-parchment);
-  opacity: 0.7;
-  letter-spacing: 0.03em;
-  margin-bottom: 2.5vh;
+  opacity: 0.75;
+  letter-spacing: 0.02em;
 }
 
 .ornament-small {
-  font-size: clamp(0.5rem, 1.5vw, 0.6rem);
+  font-size: clamp(0.45rem, 1.2vw, 0.55rem);
   color: var(--muted-teal);
   opacity: 0.4;
-  margin-bottom: 1.5vh;
 }
 
 #renaissance-mood {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: clamp(0.9rem, 2.8vw, 1.1rem);
-  line-height: 1.5;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  line-height: 1.4;
   color: var(--text-parchment);
   opacity: 0.85;
-  max-width: 90%;
+  max-width: 92%;
 }
